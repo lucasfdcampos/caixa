@@ -16,8 +16,7 @@ public class Atm implements Serializable {
     public Atm() {
     }
 
-    public Atm(Long id, @NotNull @Size(max = 5) String name, Boolean active) {
-        super();
+    public Atm(Long id, @NotNull @Size(max = 30) String name, Boolean active) {
         this.id = id;
         this.name = name;
         this.active = active;
