@@ -20,6 +20,12 @@ public class AtmController {
         return new ResponseEntity<String>(atm.toString(), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<String> updateAtm(@PathVariable("id") Long id, @RequestBody Atm atm) {
+        this.atmService.save(atm);
+        return new ResponseEntity<String>(atm.toString(), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<String> getAtm(@PathVariable("id") Long id) {
         Atm atm = null;

@@ -61,6 +61,6 @@ public class Atm implements Serializable {
 
     @Override
     public String toString() {
-        return "Atm [id=" + id + ", name='" + name + ", active=" + active + "]";
+        return "Atm [id=" + id + ", name=" + name + ", active=" + active + "]";
     }
 }
