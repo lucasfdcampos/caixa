@@ -1,7 +1,5 @@
 package br.com.caixa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -16,17 +14,17 @@ public class Movement implements Serializable {
     public Movement() {
     }
 
-    public Movement(Long id, Date dateTransaction, Account account, Account accountDestiny, MovementType movementType,
-                    Double value) {
+    public Movement(Long id, @NotNull Date dateTransaction, @NotNull Account account, @NotNull Account accountDestiny,
+                    MovementType movementType, Double value, String description) {
         this.id = id;
         this.dateTransaction = dateTransaction;
         this.account = account;
         this.accountDestiny = accountDestiny;
         this.movementType = movementType;
         this.value = value;
+        this.description = description;
     }
 
-    @JsonIgnore
     @Id
     @Column(nullable = false, name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,6 +50,9 @@ public class Movement implements Serializable {
 
     @Column(nullable = false, name = "value")
     private Double value;
+
+    @Column(name = "description")
+    private String description;
 
     public Long getId() {
         return id;
@@ -99,6 +100,14 @@ public class Movement implements Serializable {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

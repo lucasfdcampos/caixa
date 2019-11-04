@@ -48,7 +48,7 @@ public class Account implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
-    private List<Movement> listMovement;
+    private List<Movement> movements;
 
     public Long getId() {
         return id;
@@ -80,6 +80,14 @@ public class Account implements Serializable {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public List<Movement> getMovements() {
+        return movements;
+    }
+
+    public void setMovements(List<Movement> movements) {
+        this.movements = movements;
     }
 
     @Override
