@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * This class represents the banknote entity
+ * Esta classe representa a entidade de cedulas
  * @author lucas
  */
 @Entity
@@ -16,8 +16,8 @@ public class Money implements Serializable {
     public Money() {
     }
 
-    public Money(Long id, Integer five, Integer ten, Integer twenty, Integer fifty, Integer hundred) {
-        this.id = id;
+    public Money(Integer five, Integer ten, Integer twenty, Integer fifty, Integer hundred) {
+        super();
         this.five = five;
         this.ten = ten;
         this.twenty = twenty;
