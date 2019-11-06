@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-
 @Service
 @Transactional
 public class AtmOpeningService {
@@ -18,17 +17,13 @@ public class AtmOpeningService {
     @Autowired
     private AtmOpeningRepository atmOpeningRepository;
 
+    @Autowired
     private AtmService atmService;
+
+    @Autowired
     private MoneyService moneyService;
 
-
     public AtmOpeningService() {
-    }
-
-    public AtmOpeningService(AtmOpeningRepository atmOpeningRepository, MoneyService moneyService) {
-        super();
-        this.atmOpeningRepository = atmOpeningRepository;
-        this.moneyService = moneyService;
     }
 
     @Transactional(readOnly = true)
@@ -41,16 +36,30 @@ public class AtmOpeningService {
         return this.atmOpeningRepository.findByActiveAndAtm(active, atm);
     }
 
+    public void save(AtmOpening atmOpening) {
+        this.atmOpeningRepository.save(atmOpening);
+    }
+
     /**
      * Metodo responsavel pela abertura do Caixa ATM
      * @todo implementar tratamento de mensagens e excessoes
      */
     public String openAtm(Atm atm, Money money) {
         atm.setActive(true);
-        AtmOpening atmOpening = new AtmOpening(atm, true, new Date(), null, money, money, null);
-        this.moneyService.save(money);
-        atmOpeningRepository.save(atmOpening);
         this.atmService.save(atm);
+
+        this.moneyService.save(money);
+
+        AtmOpening atmOpening = new AtmOpening();
+        atmOpening.setAtm(atm);
+        atmOpening.setActive(true);
+        atmOpening.setOpeningDate(new Date());
+        atmOpening.setClosingDate(null);
+        atmOpening.setBegin(money);
+        atmOpening.setCurrent(money);
+        atmOpening.setClose(null);
+
+        this.save(atmOpening);
 
         return "OPENED";
     }
@@ -60,14 +69,18 @@ public class AtmOpeningService {
      * @todo implementar tratamento de mensagens e excessoes
      */
     public String closeAtm(Atm atm) {
-        AtmOpening atmOpening = findByActiveAndAtm(true, atm);
         atm.setActive(false);
-        Money money = atmOpening.getCurrent();
-        atmOpening.setClose(money);
-        atmOpening.setClosingDate(new Date());
-        atmOpening.setActive(false);
-        this.atmOpeningRepository.save(atmOpening);
         this.atmService.save(atm);
+
+        AtmOpening atmOpening = findByActiveAndAtm(true, atm);
+
+        Money money = atmOpening.getCurrent();
+
+        atmOpening.setActive(false);
+        atmOpening.setClosingDate(new Date());
+        atmOpening.setClose(money);
+
+        this.save(atmOpening);
 
         return "CLOSED";
     }
@@ -80,18 +93,11 @@ public class AtmOpeningService {
     public String updateAtmOpening(Atm atm, Money money) {
         AtmOpening atmOpening = findByActiveAndAtm(true, atm);
         atmOpening.setCurrent(money);
-        this.atmOpeningRepository.save(atmOpening);
+
+        this.moneyService.save(money);
+
+        this.save(atmOpening);
 
         return "UPDATED";
     }
-
-
-
-
-
-
-
-
-
-
 }
