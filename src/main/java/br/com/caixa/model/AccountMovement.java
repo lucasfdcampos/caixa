@@ -6,16 +6,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name="movement")
-public class Movement implements Serializable {
+@Table(name="account_movement")
+public class AccountMovement implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Movement() {
+    public AccountMovement() {
     }
 
-    public Movement(Long id, @NotNull Date dateTransaction, @NotNull Account account, @NotNull Account accountDestiny,
-                    MovementType movementType, Double value, String description) {
+    public AccountMovement(Long id, @NotNull Date dateTransaction, @NotNull Account account, @NotNull Account accountDestiny,
+                           MovementType movementType, Double value, String description) {
         this.id = id;
         this.dateTransaction = dateTransaction;
         this.account = account;
