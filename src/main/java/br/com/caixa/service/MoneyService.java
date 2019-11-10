@@ -1,5 +1,6 @@
 package br.com.caixa.service;
 
+import br.com.caixa.model.AtmOpening;
 import br.com.caixa.model.Money;
 import br.com.caixa.repository.MoneyRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name="account_movement")
+@Table(name="accountmovement")
 public class AccountMovement implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -14,9 +14,20 @@ public class AccountMovement implements Serializable {
     public AccountMovement() {
     }
 
-    public AccountMovement(Long id, @NotNull Date dateTransaction, @NotNull Account account, @NotNull Account accountDestiny,
-                           MovementType movementType, Double value, String description) {
+    public AccountMovement(Long id, @NotNull Date dateTransaction, @NotNull Account account,
+                           @NotNull Account accountDestiny, MovementType movementType, Double value,
+                           String description) {
         this.id = id;
+        this.dateTransaction = dateTransaction;
+        this.account = account;
+        this.accountDestiny = accountDestiny;
+        this.movementType = movementType;
+        this.value = value;
+        this.description = description;
+    }
+
+    public AccountMovement(@NotNull Date dateTransaction, @NotNull Account account, @NotNull Account accountDestiny,
+                           MovementType movementType, Double value, String description) {
         this.dateTransaction = dateTransaction;
         this.account = account;
         this.accountDestiny = accountDestiny;
@@ -39,7 +50,6 @@ public class AccountMovement implements Serializable {
     @JoinColumn(name = "account", referencedColumnName = "id")
     private Account account;
 
-    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "accountDestiny", referencedColumnName = "id")
     private Account accountDestiny;

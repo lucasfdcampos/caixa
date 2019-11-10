@@ -90,14 +90,7 @@ public class AtmOpeningService {
      * Metodo responsavel por atualizar o Caixa ATM
      * @todo implementar tratamento de mensagens e excessoes
      */
-    public String updateAtmOpening(Atm atm, Money money) {
-        AtmOpening atmOpening = findByActiveAndAtm(true, atm);
-        atmOpening.setCurrent(money);
-
-        this.moneyService.save(money);
-
+    public void updateAtmOpening(Atm atm, AtmOpening atmOpening) {
         this.save(atmOpening);
-
-        return "UPDATED";
     }
 }

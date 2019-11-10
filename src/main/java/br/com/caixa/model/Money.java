@@ -1,6 +1,7 @@
 package br.com.caixa.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
@@ -30,23 +31,28 @@ public class Money implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = true, name = "five")
+    @Min(0)
+    @Column(name = "five")
     private Integer five;
 
-    @Column(nullable = true, name = "ten")
+    @Min(0)
+    @Column(name = "ten")
     private Integer ten;
 
-    @Column(nullable = true, name = "twenty")
+    @Min(0)
+    @Column(name = "twenty")
     private Integer twenty;
 
-    @Column(nullable = true, name = "fifty")
+    @Min(0)
+    @Column(name = "fifty")
     private Integer fifty;
 
-    @Column(nullable = true, name = "hundred")
+    @Min(0)
+    @Column(name = "hundred")
     private Integer hundred;
 
     @Transient
-    private Integer amount;
+    private Double amount;
 
     public Long getId() {
         return id;
@@ -96,13 +102,13 @@ public class Money implements Serializable {
         this.hundred = hundred;
     }
 
-    public Integer totalAmount() {
+    public Double totalAmount() {
         return this.amount = (
-                (getFive() * 5) +
-                (getTen() * 10) +
-                (getTwenty() * 20) +
-                (getFifty() * 50) +
-                (getHundred() * 100)
+                (getFive() * 5d) +
+                (getTen() * 10d) +
+                (getTwenty() * 20d) +
+                (getFifty() * 50d) +
+                (getHundred() * 100d)
         );
     }
 
