@@ -16,27 +16,47 @@ public class AccountController {
 
     @PostMapping(value = "/add")
     public ResponseEntity<String> addAccount(@RequestBody Account account) {
-        this.accountService.save(account);
-        return new ResponseEntity<String>(account.toString(), HttpStatus.OK);
+        try {
+            this.accountService.save(account);
+            return new ResponseEntity<String>(account.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<String> getAccount(@PathVariable("id") Long id) {
-        Account account = null;
-        account = this.accountService.findById(id);
-        return new ResponseEntity<String>(account.toString(), HttpStatus.OK);
+        try {
+            Account account = null;
+            account = this.accountService.findById(id);
+            return new ResponseEntity<String>(account.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{id}/balance")
     public ResponseEntity<String> getAccountBalance(@PathVariable("id") Long id) {
-        Double accountBalance = this.accountService.findAccountBalance(id);
-        return new ResponseEntity<String>("Balance: " +accountBalance.toString(), HttpStatus.OK);
+        try {
+            Double accountBalance = this.accountService.findAccountBalance(id);
+            return new ResponseEntity<String>("Balance: " + accountBalance.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{agency}/{number}/balance")
     public ResponseEntity<String> getAccountBalance(@PathVariable("agency") String agency,
                                                     @PathVariable("number") String number) {
-        Double accountBalance = this.accountService.findAccountBalance(agency, number);
-        return new ResponseEntity<String>("Balance: " + accountBalance.toString(), HttpStatus.OK);
+        try {
+            Double accountBalance = this.accountService.findAccountBalance(agency, number);
+            return new ResponseEntity<String>("Balance: " + accountBalance.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 }
