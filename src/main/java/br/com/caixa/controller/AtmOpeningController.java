@@ -29,24 +29,40 @@ public class AtmOpeningController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<String> getOpeningService(@PathVariable("id") Long id) {
-        AtmOpening atmOpening = null;
-        atmOpening = this.atmOpeningService.findById(id);
-        return new ResponseEntity<String>(atmOpening.toString(), HttpStatus.OK);
+        try {
+            AtmOpening atmOpening = null;
+            atmOpening = this.atmOpeningService.findById(id);
+            return new ResponseEntity<String>(atmOpening.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/{id}/open")
     public ResponseEntity<String> openAtm(@PathVariable("id") Long id, @RequestBody Money money) {
-        Atm atm = null;
-        atm = this.atmService.findById(id);
-        String opening = this.atmOpeningService.openAtm(atm, money);
-        return new ResponseEntity<String>(opening, HttpStatus.OK);
+        try {
+            Atm atm = null;
+            atm = this.atmService.findById(id);
+            String opening = this.atmOpeningService.openAtm(atm, money);
+            return new ResponseEntity<String>(opening, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping(value = "/{id}/close")
     public ResponseEntity<String> closeAtm(@PathVariable("id") Long id) {
-        Atm atm = null;
-        atm = this.atmService.findById(id);
-        String closing = this.atmOpeningService.closeAtm(atm);
-        return new ResponseEntity<String>(closing, HttpStatus.OK);
+        try {
+            Atm atm = null;
+            atm = this.atmService.findById(id);
+            String closing = this.atmOpeningService.closeAtm(atm);
+            return new ResponseEntity<String>(closing, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

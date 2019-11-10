@@ -8,11 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 
 @Service
 @Transactional
 public class AtmOpeningService {
+    private static final String ID_INVALID = "AtmOpening ID invalid";
+    private static final String NOT_FOUND = "AtmOpening not found";
+    private static final String ATM_NULL = "ATM is null";
+    private static final String ATM_INVALID = "ATM ID invalid";
+    private static final String MONEY_NULL = "Money is null";
+    private static final String MONEY_INVALID = "Money invalid";
 
     @Autowired
     private AtmOpeningRepository atmOpeningRepository;
@@ -28,23 +35,65 @@ public class AtmOpeningService {
 
     @Transactional(readOnly = true)
     public AtmOpening findById(Long id) {
-        return this.atmOpeningRepository.getOne(id);
+
+        if ((id == null) || (id <= 0)) {
+            throw new ServiceException(ID_INVALID);
+        }
+
+        AtmOpening atmOpening = null;
+        try {
+            atmOpening = this.atmOpeningRepository.getOne(id);
+
+        } catch (EntityNotFoundException e) {
+            throw new ServiceException(NOT_FOUND);
+
+        } catch (ServiceException e) {
+            throw new ServiceException(NOT_FOUND);
+        }
+        return atmOpening;
     }
 
     @Transactional(readOnly = true)
     public AtmOpening findByActiveAndAtm(Boolean active, Atm atm) {
-        return this.atmOpeningRepository.findByActiveAndAtm(active, atm);
+
+        if (atm == null) {
+            throw new ServiceException(ATM_NULL);
+
+        } else if (atm.getId() <= 0) {
+            throw new ServiceException(ATM_INVALID);
+        }
+
+        AtmOpening atmOpening = null;
+        try {
+            atmOpening = this.atmOpeningRepository.findByActiveAndAtm(active, atm);
+
+        } catch (EntityNotFoundException e) {
+            throw new ServiceException(NOT_FOUND);
+
+        } catch (ServiceException e) {
+            throw new ServiceException(NOT_FOUND);
+        }
+        return atmOpening;
     }
 
     public void save(AtmOpening atmOpening) {
         this.atmOpeningRepository.save(atmOpening);
     }
 
-    /**
-     * Metodo responsavel pela abertura do Caixa ATM
-     * @todo implementar tratamento de mensagens e excessoes
-     */
     public String openAtm(Atm atm, Money money) {
+
+        if (money == null) {
+            throw new ServiceException(MONEY_NULL);
+
+        } else if (money.getFive().equals(0) &&
+                money.getTen().equals(0) &&
+                money.getTwenty().equals(0) &&
+                money.getFifty().equals(0) &&
+                money.getHundred().equals(0)) {
+
+            throw new ServiceException(MONEY_INVALID);
+        }
+
         atm.setActive(true);
         this.atmService.save(atm);
 
@@ -64,11 +113,15 @@ public class AtmOpeningService {
         return "OPENED";
     }
 
-    /**
-     * Metodo responsavel pelo fechamento do Caixa ATM
-     * @todo implementar tratamento de mensagens e excessoes
-     */
     public String closeAtm(Atm atm) {
+
+        if (atm == null) {
+            throw new ServiceException(ATM_NULL);
+
+        } else if (atm.getId() <= 0) {
+            throw new ServiceException(ATM_INVALID);
+        }
+
         atm.setActive(false);
         this.atmService.save(atm);
 
@@ -85,11 +138,6 @@ public class AtmOpeningService {
         return "CLOSED";
     }
 
-    /**
-     *
-     * Metodo responsavel por atualizar o Caixa ATM
-     * @todo implementar tratamento de mensagens e excessoes
-     */
     public void updateAtmOpening(Atm atm, AtmOpening atmOpening) {
         this.save(atmOpening);
     }
