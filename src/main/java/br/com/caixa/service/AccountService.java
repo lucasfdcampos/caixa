@@ -67,6 +67,11 @@ public class AccountService {
         this.accountRepository.save(account);
     }
 
+    public void update(Account account) {
+        this.accountRepository.save(account);
+    }
+
+
     @Transactional(readOnly = true)
     public Account findById(Long id) {
 

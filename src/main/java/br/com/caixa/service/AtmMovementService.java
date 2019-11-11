@@ -212,14 +212,14 @@ public class AtmMovementService {
             // Account balance [destiny]
             accountDestiny.setBalance(accountDestiny.getBalance() + atmMovement.getValue());
 
-            this.accountService.save(accountDestiny);
+            this.accountService.update(accountDestiny);
 
         } else {
             throw new ServiceException(INVALID_OPERATION);
         }
 
         // Account
-        this.accountService.save(account);
+        this.accountService.update(account);
 
         // Account Movement
         this.accountMovementService.save(accountMovement);

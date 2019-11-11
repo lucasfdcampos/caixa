@@ -20,7 +20,11 @@ public class WithdrawService {
         try {
             Double valueAtmAmount = atmOpening.getCurrent().totalAmount();
 
-            if (valueAtmAmount > value) {
+            if (valueAtmAmount >= value) {
+
+                Integer hundred, fifty, twenty, ten, five;
+                hundred = fifty = twenty = ten = five = 0;
+
                 Money money = moneyService.findById(atmOpening.getCurrent().getId());
                 Integer quantHundred = money.getHundred();
                 Integer quantFifty = money.getFifty();
@@ -28,43 +32,84 @@ public class WithdrawService {
                 Integer quantTen = money.getTen();
                 Integer quantFive = money.getFive();
 
-                while(value != 0) {
-                    if (value >= 100) {
-                        while (value >= 100 && quantHundred > 0) {
-                            value = value % 100d;
-                            quantHundred--;
-                        }
-                    } else if (value >= 50) {
-                        while (value >= 50 && quantFifty > 0) {
-                            value = value % 50d;
-                            quantFifty--;
-                        }
-                    } else if (value >= 20) {
-                        while (value >= 20 && quantTwenty > 0) {
-                            value = value % 20d;
-                            quantTwenty--;
-                        }
-                    } else if (value >= 10) {
-                        while (value >= 10 && quantTen > 0) {
-                            value = value % 10d;
-                            quantTen--;
-                        }
-                    } else if (value >= 5) {
-                        while (value >= 5 && quantFive > 0) {
-                            value = value % 5d;
-                            quantFive--;
+                if (quantHundred > 0) {
+
+                    Double result = value / 100d;
+                    int quantDiv = result.intValue();
+
+                    for (int i = 0; i < quantHundred; i++) {
+                        hundred++;
+                        if (quantDiv <= hundred) {
+                            break;
                         }
                     }
+                    value = value - (hundred * 100);
+                }
+
+                if ((value >= 50) && (quantFifty > 0)) {
+
+                    Double result = value / 50d;
+                    int quantDiv = result.intValue();
+
+                    for (int i = 0; i < quantFifty; i++) {
+                        fifty++;
+                        if (quantDiv <= fifty) {
+                            break;
+                        }
+                    }
+                    value = value - (fifty * 50);
+                }
+
+                if ((value >= 20) && (quantTwenty > 0)) {
+
+                    Double result = value / 20d;
+                    int quantDiv = result.intValue();
+
+                    for (int i = 0; i < quantTwenty; i++) {
+                        twenty++;
+                        if (quantDiv <= twenty) {
+                            break;
+                        }
+                    }
+                    value = value - (twenty * 20);
+                }
+
+                if ((value >= 10) && (quantTen > 0)) {
+
+                    Double result = value / 10d;
+                    int quantDiv = result.intValue();
+
+                    for (int i = 0; i < quantTen; i++) {
+                        ten++;
+                        if (quantDiv <= ten) {
+                            break;
+                        }
+                    }
+                    value = value - (ten * 10);
+                }
+
+                if ((value >= 5) && (quantFive > 0)) {
+
+                    Double result = value / 5d;
+                    int quantDiv = result.intValue();
+
+                    for (int i = 0; i < quantFive; i++) {
+                        five++;
+                        if (quantDiv <= five) {
+                            break;
+                        }
+                    }
+                    value = value - (five * 5);
                 }
 
                 if (value > 0) {
                     throw new ServiceException(INSUFFICIENT_BANKNOTES);
                 }
-                money.setFive(quantFive);
-                money.setTen(quantTen);
-                money.setTwenty(quantTwenty);
-                money.setFifty(quantFifty);
-                money.setHundred(quantHundred);
+                money.setFive(quantFive - five);
+                money.setTen(quantTen - ten);
+                money.setTwenty(quantTwenty - twenty);
+                money.setFifty(quantFifty - fifty);
+                money.setHundred(quantHundred - hundred);
 
                 return money;
 
