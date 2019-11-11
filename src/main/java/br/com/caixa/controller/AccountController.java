@@ -1,11 +1,14 @@
 package br.com.caixa.controller;
 
 import br.com.caixa.model.Account;
+import br.com.caixa.model.AccountMovement;
 import br.com.caixa.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/api/account")
@@ -54,6 +57,18 @@ public class AccountController {
         try {
             Double accountBalance = this.accountService.findAccountBalance(agency, number);
             return new ResponseEntity<String>("Balance: " + accountBalance.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/{agency}/{number}/bankstatement")
+    public ResponseEntity<String> getBankStatement(@PathVariable("agency") String agency,
+                                                   @PathVariable("number") String number) {
+        try {
+            List<AccountMovement> bankStatement = this.accountService.bankStatement(agency, number);
+            return new ResponseEntity<String>(bankStatement.toString(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);

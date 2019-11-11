@@ -2,12 +2,14 @@ package br.com.caixa.service;
 
 
 import br.com.caixa.model.Account;
+import br.com.caixa.model.AccountMovement;
 import br.com.caixa.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @Transactional
@@ -22,6 +24,9 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountMovementService accountMovementService;
 
     public AccountService() {
     }
@@ -118,7 +123,7 @@ public class AccountService {
 
         Account account = null;
         try {
-            account = findByAgencyNumber(agency, number);
+            account = this.findByAgencyNumber(agency, number);
 
         } catch (EntityNotFoundException e) {
             throw new ServiceException(NOT_FOUND);
@@ -128,5 +133,22 @@ public class AccountService {
         }
         Double balance = account.getBalance();
         return balance;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccountMovement> bankStatement(String agency, String number) {
+
+        Account account = null;
+        try {
+            account = this.findByAgencyNumber(agency, number);
+
+        } catch (EntityNotFoundException e) {
+            throw new ServiceException(NOT_FOUND);
+
+        } catch (ServiceException e) {
+            throw new ServiceException(NOT_FOUND);
+        }
+        List<AccountMovement> bankStatement = this.accountMovementService.findAllByAccount(account);
+        return bankStatement;
     }
 }
