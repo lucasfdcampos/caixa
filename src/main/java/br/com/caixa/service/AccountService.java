@@ -21,6 +21,7 @@ public class AccountService {
     private static final String BALANCE_INVALID = "Balance value invalid";
     private static final String ID_INVALID = "Account ID invalid";
     private static final String NOT_FOUND = "Account not found";
+    private static final String ACCOUNT_EXIST = "Account already exists";
 
     @Autowired
     private AccountRepository accountRepository;
@@ -53,6 +54,16 @@ public class AccountService {
         } else if (account.getBalance() < 0) {
             throw new ServiceException(BALANCE_INVALID);
         }
+
+        Account searchAccount = null;
+        try {
+            searchAccount = this.findByAgencyNumber(account.getAgency(), account.getNumber());
+        } catch (Exception e) { }
+
+        if ((searchAccount != null) && (searchAccount.getId() != 0)) {
+            throw new ServiceException(ACCOUNT_EXIST);
+        }
+
         this.accountRepository.save(account);
     }
 
